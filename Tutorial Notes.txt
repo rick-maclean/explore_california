@@ -5,9 +5,9 @@ ABOUT DIRSTIBUTED VERSION CONTROL
 WHO SHOULD USE GIT
 
 =========================Chapter 2===INSTALLING GIT===================
-INTALLING GIT===================
+*********====== INTALLING GIT===================
 
-GIT CONFIGURATION===================
+*********====== GIT CONFIGURATION===================
 *SYSTEM  
 /etc/gitconfig
 program files\git\etc\gitconfig
@@ -38,13 +38,13 @@ git config user.email   to see it
 git config --global core.editor "notepad++"    should I do this? It is not in my config
 git config --global core.editor "mae -wl1"     one for Linux
 
-USING GIT HELP===============
+*********====== USING GIT HELP===============
 git help log   (windows this just launches in Chrome)
   f b q
 www.kernel.org/pub/software/scm/git/docs/
 
 =========================Chapter 3===GETTING STARTED=========================
-Initializing a Repo====================
+*********====== Initializing a Repo====================
 make folder
 goto folder
 git init   creates .git folder
@@ -52,7 +52,7 @@ git init   creates .git folder
    only make changes for the config file but should not edit directly
    everything git does happens in this directory to track what is happening
    
-Performing your first commit=============================
+*********====== Performing your first commit=============================
 1) create file
 2) git add .   to add all files
 3) git commit -m "Initial commit"     -m for message
@@ -62,7 +62,7 @@ BASIC CYCLE/FLOW
 2) add the changes
 3) commit changes to the repository with a message
 
-WRITING COMMIT MESSAGES============================
+*********====== WRITING COMMIT MESSAGES============================
 --describe the changes you made
 -short single-line summary (< 50 chars)
 -optionally followed by a blank line and more complete description (<72 chars)
@@ -81,7 +81,7 @@ describe the solution
 
 NOTE********  Mary needs to know if she wants to incorporate this Commit Snapshot to her repo 
 
-VIEWING THE COMMITE LOG============================
+*********====== VIEWING THE COMMITE LOG============================
 git log
 
 use git log to see what everyone has done on the project
@@ -95,7 +95,7 @@ git log --grep="Init"   any commits that contain this in message
 
 
 =========================Chapter 4===CONCEPTS AND ARCHITECTURE===================
-Exploring the three-trees architecture=============================
+*********====== Exploring the three-trees architecture=============================
 
 TWO-TREE ARCHITECTURE (typical)
 			repository  (similar structure)
@@ -119,7 +119,7 @@ repo --> staging --> working
 BUT NORMALLY
 repo --pull--> working   this will update the staging area when we do this.
 
-THE GIT WORKFLOW ===========================
+*********====== THE GIT WORKFLOW ===========================
 new file
     repo
 	staging index
@@ -134,7 +134,7 @@ edit to file (change set B and C)
 	staging index	B C
 	working			B C
 	
-USING HASH VALUES (SHA-1)======================
+*********====== USING HASH VALUES (SHA-1)======================
 referring to commits A B C 
 	--each change set can be a snapshot of changes to # files
 	
@@ -166,7 +166,7 @@ snapshot C
    author John
    message Fix Bug...
    
-Working with the HEAD pointer=========================
+*********====== Working with the HEAD pointer=========================
 Git maintains a reference pointer called HEAD (points to a specific in the repo)
 --as we make new commits the pointer changes to move the 
 *pointer to the "tip" of current branch in repository (NOT stagingIndex or workingDirectory )
@@ -201,7 +201,7 @@ refs/heads/master
 5de8bbd6b04612c19614f19c8f0fbdda415d1113  the current TIP SHA# for the branch
 
 =========================Chapter 5===MAKING CHANGES TO FILES==================
-Adding files====================
+*********====== Adding files====================
 git status (what is the status between 3 trees repo, stage, working)
 git add second.txt
 git commit -m "Add second file"
@@ -212,13 +212,13 @@ git commit -m "Add third file"
 git add third.txt
 git status
 
-Editing files=====================
+*********====== Editing files=====================
 change a file
 git add first.txt
 git commit -m "made changes to first file"
 etc etc etc
 
-Viewing changes with diff====================
+*********====== Viewing changes with diff====================
 git diff
 NOTE:  shows old file then new  --- +++
 It shows line by line what changed even in only part of a line changed.
@@ -228,7 +228,7 @@ Shows ALL files that have changed
 git diff first.txt
 will only diff on that file
 
-Viewing only staged changes========================
+*********====== Viewing only staged changes========================
 on staging index
 after changes to borth 1st and 3rd do...
 git add first_file.txt
@@ -236,7 +236,7 @@ git status
 git diff (only checks Working vs Repository)
 git diff --staged
 
-Deleting files=============================
+*********====== Deleting files=============================
 create  fileToDelete1.txt and fileToDelete1.txt
 git add .
 git commit -m "add 'red shirt' files"
@@ -248,7 +248,7 @@ git commit -m "Delete first red shirt time fileToDelete1.txt"
 
 git rm FileToDelete2.txt  (same as removing file and putting in staging)
 
-Moving and renaming files=====moving and renaming are the same=====================
+*********====== Moving and renaming files=====moving and renaming are the same=====================
 let git handle things in the OS for us or just do it in OS and give commands from git
 eg ren first_file.txt primary_file.txt
 git add primaty_file.txt
@@ -268,9 +268,9 @@ git commit -m "Reorganizing files structure by moving files"
 
 =========================Chapter 6===USING GIT WITH A REAL PROJECT==================
 
-Introducing the Explore California web site=============================
+*********====== Introducing the Explore California web site=============================
 
-Initializing Git====================================
+*********====== Initializing Git====================================
 the california file was not a git repo
 therefore do
 git init
@@ -282,7 +282,7 @@ git commit -m "initial commit"
 
 Note: I can have 20 web sites and each one is a separate Git repo
 
-Editing the support phone number=========================
+*********====== Editing the support phone number=========================
 used Notepad++ to do a change all on all places 4315 is and changed to 4314
 Next
 could do this
@@ -291,7 +291,7 @@ or
 git commit -a   (only for files that are modified)  therefore
 git commit -am "doing commit of the 24 hour conact number to 4314"
 
-Editing the backpack file name and links===============================
+*********====== Editing the backpack file name and links===============================
 mv tours/tour_detail_backpack.html tours/tour_detail_backpack_cal.html
 git status
 next changed files to reference the correct fileName. Then we see a number of files ready to commit
@@ -305,9 +305,9 @@ git commit -am "Removed contractions from contacts.html page"
 
 
 =========================Chapter 7===UNDOING CHANGES==================
-Undo what I just did woops
+*********====== Undo what I just did woops
 
-Undoing working directory changes=========================
+*********====== Undoing working directory changes=========================
 deleted section of index.html and want to get it backpack
 git checkout -- index.html  (the -- says stay on same branch)(blow away changes and get file in repo)
 
@@ -319,7 +319,7 @@ git status
 unstage this file
 git reset HEAD resources.html
 
-Amending commits================================
+*********====== Amending commits================================
 undoing commits is trickier
 this is because the HASH gets changed if we make a change to a 
 commit because the contents change and SHA changes too
@@ -334,7 +334,7 @@ MAKE another change
 now we want this added to the last commit
 git commit --amend -m "Rearrange the items to bring on the trip"
 
-Retrieving old versions================================
+*********====== Retrieving old versions================================
 If we want to undo older changes then redo it and do a new commit.
 We can checkout a version of a file from an older commit by referencing the SHA or part of it
 git checkout fc784620 -- resources.html   (this will get the version of this file from that SHA)
@@ -349,13 +349,13 @@ soooo
 git reset HEAD resources.html
 git checkout -- resources.html
 
-Reverting a commit================================
+*********====== Reverting a commit================================
 we can reverse all the changes in a commit
 git revert SHA
 
 for complex changes we are actually doing a merge
 
-Using reset to undo commits=============================
+*********====== Using reset to undo commits=============================
 VERY DANDEROUS
 
 git reset  <--decide where to have HEAD pointer to point to.  Wipe out more recent commits
@@ -369,16 +369,16 @@ git reset  <--decide where to have HEAD pointer to point to.  Wipe out more rece
 				changes staging index and working directory to match repository
 				    use only when something has gone really badly and we want to wipe our all changes
 
-Demonstrating a soft reset=====================
+*********====== Demonstrating a soft reset=====================
 git reset --soft 7a5500a61  <-- moves the HEAD pointer to that SHA
 
-Demonstrating a mixed reset=====================
+*********====== Demonstrating a mixed reset=====================
 git reset --mixed 7a5500a61  <-- moves the HEAD pointer to that SHA and sets staging area to repo
 
-Demonstrating a hard reset=========================
+*********====== Demonstrating a hard reset=========================
 git reset --hard SHA
 
-Removing untracked files===============================
+*********====== Removing untracked files===============================
 what if you have a bunch of garbage files created
 git clean -n  <--trial run
 git clean -f  <--forces it to run since it will delete things
@@ -387,7 +387,7 @@ what if we do
 git add junk1.txt
 =========================Chapter 8===IGNORING FILES==================
 
-Using gitignore files=======================
+*********====== Using gitignore files=======================
 project/.gitignore
    can use regular exp    * ? [aeiou] [0-9]
    negate expressions with !
@@ -412,7 +412,7 @@ assets/viedos/
 
 #question: would log/archive/access.log be ignored?   <--no 
 
-Understanding what you ignore========================
+*********====== Understanding what you ignore========================
 *compiled source code*
 *packages and compressed files
 *logs and databases (files that change often)
@@ -422,14 +422,14 @@ TIPS
 https://help.github.com/articles/ignoring-files
 https://github.com/github/gitignore
 
-Ignoring files globally=========================
+*********====== Ignoring files globally=========================
 *ignore files on all repository
 *setting not tracked in repo
 *user-specific instead of repo-specific
 git config --global core.excludesfile ~/.gitignore_global  <--can be any file I want it to be
 git config --global core.excludesfile D:\MacLean\Git Essentials\GitRepos\.gitignoreRick_global
 
-Ignoring tracked files=========================
+*********====== Ignoring tracked files=========================
 what if we want to untrack a file that is already being tracked. ignore will not work
 add tempfile2.txt
 add and commit
@@ -441,7 +441,7 @@ git rm --cached tempfile2.txt   (this will stop it being tracked in the staging 
 
 git commit -m "Remove tempfile2.txt from staging index"
 
-Tracking empty directories=======================
+*********====== Tracking empty directories=======================
 .git is designed to be a file-tracking system (not empty folders)
    tracks files
    tracks the directories it takes to get to files
@@ -459,7 +459,7 @@ git commit -m "Add 'emtpty' directory with .gitkeep file in it"
 
 
 =========================Chapter 9===NAVIGATING THE COMMIT TREE==================
-Referencing commits=====================
+*********====== Referencing commits=====================
 treeish something that reverences the tree... ish sort of
 tree-ish
     full SHA-1 hash
@@ -476,7 +476,7 @@ tree-ish
 	  eg HEAD~2,                (give number for how many generations back)
 	etc...
 	
-Exploring tree listings======================
+*********====== Exploring tree listings======================
 git ls-tree <tree-ish>
 git ls-tree HEAD
 git ls-tree master
@@ -487,7 +487,7 @@ git ls-tree 6fa98b83 (SHA of assets)
 blob is a file
 tree is a directory
 
-Getting more from the commit log================
+*********====== Getting more from the commit log================
 some helpful things for git log
 git log --oneline
 git log --oneline -3 
@@ -506,7 +506,7 @@ git log --graph              <--graph of each commit, will show branches
 
 git log --oneline --graph --all --decorate
 
-Viewing commits======================
+*********====== Viewing commits======================
 see specific commit
 git show sha       <--gives the diffs too 
 
@@ -516,7 +516,7 @@ can also do show for files and folders but need the SHA for this
 git show assets/
 git show 9e874297  (SHA of index.html)
 
-Comparing commits=====================
+*********====== Comparing commits=====================
 state of all the files in the directory is compared to see what has changed 
 compare commits
 compare branches 
@@ -538,7 +538,7 @@ git diff  -b SHA..HEAD <--ignore space changes
 git diff  -w SHA..HEAD <--ignore all spaces
 
 =========================Chapter 10===BRANCHING==================
-Branching overview======================
+*********====== Branching overview======================
 Branches are one of the most powerful features in Git, in large part because of 
 how easy they are to use. It's as if Git wants you to branch, and getting the 
 most out of Git will mean using branches often and effectively. In Git, branches 
@@ -568,7 +568,7 @@ can have many branches
 **** WHERE IS HEAD POINTER
 create branch and HEAD is at same SHA until commit is made then HEAD is on branch SHA
 
-Viewing and creating branches======================
+*********====== Viewing and creating branches======================
 git branch <--shows all branches on machine
 
 when I new branch is created it creates a file in 
@@ -579,7 +579,7 @@ create a branch
 git branch new_feature 
 cat .git/refs/heads/new_feature 
 
-Switching branches======================
+*********====== Switching branches======================
 git checkout new_feature 
 cat .git/HEAD 
 
@@ -587,7 +587,7 @@ tips are the same now....
 now change index.html 
 git commit -am "Save change to title in index.html"
 
-Creating and switching branches======================
+*********====== Creating and switching branches======================
 git branch new_feature
 git show HEAD
 git checkout -b shorten_title  <--create and switch to new branch off of new_feature
@@ -597,7 +597,7 @@ commit
 
 now we have 3 branches....
 
-Switching branches with uncommitted changes ======================
+*********====== Switching branches with uncommitted changes ======================
 stash????
 change index.html again
 git checkout master     <---error warning about overwriting changes if I do this
@@ -606,7 +606,7 @@ git commit -am "Swap our - for : in index.html title"
 now add tempfile3.txt  and we can switch between branches since this file is not tracked and 
 						we won't loose and data. 
 						
-Comparing branches ======================
+*********====== Comparing branches ======================
 git diff master..new_feature    compares the tips of each of these branches 
 git diff master..shorted_title   order of them would change the results 
 git diff --color-words master..shorted_title  <--puts changes on one line
@@ -626,11 +626,11 @@ git branch --merged   <--this lists the branches that have commits which are in 
 git checkout new_feature
 git branch --merged  <--just shows master
 
-Renaming branches ======================
+*********====== Renaming branches ======================
 git branch -m new_feature searchEngineOptimization-TItle
 git branch --move new_feature searchEngineOptimization-TItle
 
-Deleting branches ======================
+*********====== Deleting branches ======================
 git checkout master
 git branch branch_to_delete
 git branch -d branch_to_delete
@@ -645,7 +645,7 @@ switch to master
 try to delete and cannot do it
 git branch -D branch_to_delete    will override 
 
-Configuring the command prompt to show the branch ======================
+*********====== Configuring the command prompt to show the branch ======================
 on Linux you need this file in your global area
  .git-completion.bash
  this give you  __git_ps1 as a command
@@ -660,7 +660,7 @@ on Linux you need this file in your global area
   export PS1='$(__git_ps1 "(%s)") > ' 
   
 =========================Chapter 11===MERGING BRANCHES==================
-Merging code ======================
+*********====== Merging code ======================
 from one branch to another
 1) move to branch which will receive the changes
 git branch master
@@ -669,7 +669,7 @@ git diff master..seo_Title
 now
 git branch -d seo_Title
 
-Using fast-forward merge vs. true merge ======================
+*********====== Using fast-forward merge vs. true merge ======================
 If master has changes in it since seo_Title was made then we need to merge diffs
 eg
 change index in master and seo_Title 
@@ -687,7 +687,7 @@ now let's merge in shorten_title  <--we want to force non ff so do a commit on m
 5) git merge shorten_title  <--pulls up editor (only if I have an editor defined)
 6) this worked easily since no conflicts
 
-Merging conflicts ======================
+*********====== Merging conflicts ======================
 eg change index.html in two branches in different locations of the file.
 git can do an automatic merge
 BUT if two changes to a set of lines together.
@@ -718,7 +718,7 @@ It looks like this.
             <p>We have also worked very hard to make Explore California more than just a tour company. <a href="explorers/join.html">Join our community</a> and become part of the conversation. Recommend tours, blog about your journeys, and share pictures and video with other tour members.</p>
 >>>>>>> text_edits
 
-Resolving merge conflicts ======================
+*********====== Resolving merge conflicts ======================
 How to do it.....
 1) abort the merge
 2) resolve the conflicts manually  (first learn how to do this before using tools)
@@ -744,7 +744,7 @@ git mergetool --tool=nameOfTool
 git mergetool   will show all the tools I can use 
 
 
-Exploring strategies to reduce merge conflicts ======================
+*********====== Exploring strategies to reduce merge conflicts ======================
 keep lines short 
 keep commits small and focused 
 beware stray edits to whitespace 
@@ -753,7 +753,7 @@ KEY***>merge often with master --so you can keep working on branch but merge oft
 		avoid huge diffs 
 KEY***>track changes to master (keep getting those changes from master while on branch)
 =========================Chapter 12===STASHING CHANGES==================
-Saving changes in the stash ======================
+*********====== Saving changes in the stash ======================
 In this chapter we're going to learn about a future of Git called the stash. 
 The stash is a place where we can store changes temporarily without having to commit 
 them to the repository. It's a lot like putting something into a drawer to save it for 
@@ -771,7 +771,7 @@ git stash save  "changed mission page title"
 git status 
 git log --oneline -3 
 
-Viewing stashed changed ======================
+*********====== Viewing stashed changed ======================
 git stash list <--now do it  NOTE: referred to by stash@{0}
 now switch to master and we can still see what is in the stash when over there
 
@@ -779,7 +779,7 @@ see more this way
 git stash show stash@{0}
 git stash show -p stash@{0}   <---patch....show the edits DIFF 
 
-Retrieving stashed changes ======================
+*********====== Retrieving stashed changes ======================
  NOTE If we put them in the drawer before, now we want to get them back out of 
  the drawer, and when we do that it's going to bring those changes back 
  into our working directory, whatever that working directory is, whichever 
@@ -805,7 +805,7 @@ Retrieving stashed changes ======================
  git stash apply 
  git stash list 
   
-Deleting stashed changes ======================
+*********====== Deleting stashed changes ======================
 git stash list 
 git stash drop stash@{0}   <--a particular stash 
 
@@ -823,7 +823,7 @@ git stash clear
 
 
 =========================Chapter 13===REMOTES==================
-Using local and remote repositories ======================
+*********====== Using local and remote repositories ======================
 The concept is that there is a remote server, and we'll take our changes that 
 we've made and put them on that remote server so that other people can then 
 see them. They can then download the changes that we've made to their repositories, 
@@ -929,7 +929,7 @@ to the remote server. If the process seems at all unclear now, it'll become seco
 nature soon enough.
 
 
-Setting up a GitHub account ======================
+*********====== Setting up a GitHub account ======================
 GitHub 
   most popular Git host 
   free and inexpensive hosting plans
@@ -944,7 +944,7 @@ NOTE: use the commands they suggest
 git remote add origin https://github.com/rick-maclean/explore_california.git
 git push -u origin master 
 
-Adding a remote repository ======================
+*********====== Adding a remote repository ======================
 not tell our local one where to find it on github
 
 git remote   <--shows all remotes our repo knows about which are none now
@@ -957,7 +957,7 @@ git remote
 git remote -v
 git remote rm origin  (this will remove it from my local repo)
 
-Creating a remote branch ======================
+*********====== Creating a remote branch ======================
 git push -u origin master      push this branch onto the corresponding branch on the remote server
                              push to 'origin' the local branch 'master' on the remote server
 							 
@@ -971,7 +971,7 @@ cat .git/refs/remotes/master  <--shows the SHA of the repo
 git branch -r  <--shows remote branchs
 git branch -a  <--shows All
 
-Cloning a remote repository ======================
+*********====== Cloning a remote repository ======================
 This is the normal way we do things.  Clone one that someone else has created or we just 
 want to get our repo onto another computer 
 
@@ -982,7 +982,7 @@ git clone https://github.com/rick-maclean/explore_california.git ricks_clone
 git branch  <--will only get the master branch
 git clone -b for branch will get a particular branch
 
-Tracking remote branches ========AUTOMATICALLY==============
+*********====== Tracking remote branches ========AUTOMATICALLY==============
 pull updates from master regularly
 
 Now tracking is really common with remote branches, and it works in a similar way, 
@@ -1015,7 +1015,7 @@ git config branch.non_tracking.remote origin
 OR do this
 git branch --set-upstream non_tracking origin/non_tracking  <--we are not going to do this
 
-Pushing changes to a remote repository ======================
+*********====== Pushing changes to a remote repository ======================
 modify tours.html to change a link to another html file
 change all Detail to _detail
 
@@ -1036,7 +1036,7 @@ cd ..
 cd ricks_clone 
 git log --oneline origin/master  does not show the most recent commit THEREFORE fetch
 
-Fetching changes from a remote repo ======================
+*********====== Fetching changes from a remote repo ======================
 cd ricks_clone 
 git log --oneline origin/master  does not show the most recent commit THEREFORE fetch
 git branch 
@@ -1055,7 +1055,7 @@ fetch first thing in morning  before you work
 fetch before you push
 fetch often            <--it is not going to hurt what I have in my master branch
 
-Merging in fetched changes ======================
+*********====== Merging in fetched changes ======================
 after fetch to origin/master  my local copy of the remote....I can merge in those commits
 
 In the last movie, we used git fetch in order to sync up origin/master with the 
@@ -1106,7 +1106,7 @@ git pull = git fetch + git merge    <--it obscures what is happening and if thin
 										it is hard to fix it. 
 
 
-Checking out remote branches ======================
+*********====== Checking out remote branches ======================
 while on ricks_clone
 git branch -r  <--shows origin/non_tracking
 SOoooo
@@ -1120,7 +1120,7 @@ git branch -d non_tracking  <--can do this
 can also do this 
 git checkout -b non_tracking  origin/non_tracking 
 
-Pushing to an updated remote branch ======================
+*********====== Pushing to an updated remote branch ======================
 when a coworker has changed things on the remote repo
 
 Git never tries to do a merge during a push. Instead what Git says is, some 
@@ -1135,7 +1135,7 @@ Soooo first fetch then merge (and if there are conflicts resolve)
 2) merge   (with coworkers on my origin/master)
 3) push     (now the remote server will accept it)
 
-Deleting a remote branch ======================
+*********====== Deleting a remote branch ======================
 older way 
 git push origin :non_tracking   <--deletes it 
 git branch -r 
@@ -1143,7 +1143,7 @@ git branch -r
 newer way 
 git push origin --delete non_tracking   <--this deletes it on the remote
 
-Enabling collaboration ======================
+*********====== Enabling collaboration ======================
 In this movie I want to talk about how we can enable collaborators on your project 
 and also how you can become a collaborator to open source project. Now you maybe 
 thinking, well, wait a minute we've already been doing collaboration right? We have 
@@ -1199,7 +1199,7 @@ you can enable collaboration using Git. The process is little different if you'r
 going to give someone else read/write access or if you're going to work on a project 
 where you don't have write access.
 
-A collaboration workflow ======================
+*********====== A collaboration workflow ======================
 In this movie, we will look at an example workflow showing how to use Git to collaborate with another user. My hope is that this kind of real-world example will help to give you a big picture and will pull together all the different pieces that we have learned. But we are not going to actually make the changes, that would take more time and would also keep you from seeing the workflows clearly. For this example, I am going to collaborate with my coworker Lynda on adding a new feature to the Explore California web site and our new feature will be a feedback form, so the customers of Explore California can share their comments and feedback.
 
 MY Work
@@ -1274,7 +1274,7 @@ git push
 It may change because you may be collaborating with three or four different people, you may all be checking in and out things, but it's the same basic kind of process over and over again. It may seem like a lot to remember when you're a beginner, but it becomes second nature very quickly. 
 
 =========================Chapter 14===TOOLS AND NEXT STEPS==================
-Setting up aliases for common commands =========================
+*********====== Setting up aliases for common commands =========================
 --can be dangerous as a beginner 
 -- but can be good to helpful (put in user global config)
 -- USER C:\Users\maclean\.gitconfig 
@@ -1290,7 +1290,7 @@ git config --global alias.df diff
 git config --global alias.dfs "diff --staged"
 git config --global alias.logg  "log --graph --decorate --oneline --abbrev-commit --all"
 
-Using SSH keys for remote login =========================
+*********====== Using SSH keys for remote login =========================
 Throughout the chapter on working with remotes, every time we want to communicate with 
 the remote repository, we had to enter our credentials again, our username and our 
 password, and we had to do it every single time, even if we were just doing git fetch, 
@@ -1302,7 +1302,7 @@ Instead, we have a little bit of code, an actual file that resides on my compute
 And I take that same code, or actually a complementary part of it, and put it up on 
 the GitHub server.
 
-Exploring integrated development environments =========================
+*********====== Exploring integrated development environments =========================
 Many of you are probably new to Git, but not new to the world of development, 
 and you probably have some tools that you already like to use. Typically, these 
 would be editors and integrated development environments, or IDEs for short.
@@ -1322,7 +1322,7 @@ would be editors and integrated development environments, or IDEs for short.
  RubyMIne
  PHPStorm
  
-Exploring graphical user interfaces =========================
+*********====== Exploring graphical user interfaces =========================
 GitWeb --need to set up web server to host it
 
 Graphical User Interfaces for Mac
@@ -1342,7 +1342,7 @@ SmartGit		syntevo.com/smartgit
 git.wiki.kernel.org/index.php/InterfacesFrontendsAndTools 
 
 
-Understanding Git hosting =========================
+*********====== Understanding Git hosting =========================
 Git Hosting Companies
 GitHub		github.com 
 Bitbucket	bitbucket.org 
