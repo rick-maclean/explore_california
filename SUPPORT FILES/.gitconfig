@@ -1,0 +1,18 @@
+[user]
+	name = Rick Maclean
+	email = rick_maclean@sil.org
+[fwinit]
+	gerrituser = maclean
+[gui]
+	recentrepo = C:/fwrepo/fw
+[color]
+	ui = true
+[alias]
+	st = status
+	co = checkout
+	df = diff
+	dfs = diff --staged
+	logg = log --graph --decorate --oneline --abbrev-commit --all
+	log1 = log --oneline
+	ci = commit
+	br = branch

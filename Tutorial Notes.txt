@@ -1343,7 +1343,15 @@ git.wiki.kernel.org/index.php/InterfacesFrontendsAndTools
 
 
 Understanding Git hosting =========================
+Git Hosting Companies
+GitHub		github.com 
+Bitbucket	bitbucket.org 
+Gitorious	gitorious.org 
 
+Git self hosting???
+firewall needed
+---Gitosis github.com/tv42/gitosis        <--not so good since development stopped years ago
+---Gitolite github.com/sitaramc/gitolite  <---use this since active
 
 
 ===================================================
