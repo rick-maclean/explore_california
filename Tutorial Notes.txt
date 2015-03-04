@@ -1277,23 +1277,23 @@ Before I merge it in though, I want to take a look at it, so I am going to using
 
 My work 
 git fetch
-git log -p feedback_form..origin/feedback_form 
+git log -p feedback_form..origin/feedback_form     <-- -p patch allows me to see the changes
 
 So I am going to now go ahead and merge them into my feedback branch. So at this point now, the feedback_form branch is in sync between me, the remote repository and Lynda. We all have the same things. In this case the merge was a fast-forward merge, so there is really nothing to commit, but if I had made other changes in the mean time that I needed to merge in, well then I would merge those together, and we will push the result back up to the remote. But since I didn't, since it was a simple fast-forward merge, I am ready to now call this feature finished and to fold it back into the master branch.
 
-git merge origin/feedback_form 
+git merge origin/feedback_form                 <--this merges her changes into mine
 
 So I am going to switch back to the master branch, after I switch branches, I want to do a git fetch and find out if there were any changes that came in, while I was looking at Lynda's changes. If there were new changes that came in, I am going to merge those back into origin/master. At this point now, master is completely up to date. I definitely want to make sure I have got master as up to date is possible before I do this next step. Then next step is that I am going to merge in the changes from feedback form. I am going to take the new work and merge it into the most recent possible state of master.
 
-git checkout master 
-git fetch 
-git merge origin/master 
-git merge feedback_form
+git checkout master            <--call it finished now and fold it into my master branch
+git fetch                      <--get any other changes
+git merge origin/master        <--merge in any changes 
+git merge feedback_form        <--merge in the changes into master
 
 
 I did a merge from feedback_form but I could have just as easily done a merge from origin feedback_form. They both point to the exact same commit and then after I have made that merge, and I've resolved any kind of merge conflicts that might have come up, then I do git push, and now my work is on the remote in the master branch where all of my coworkers can see it, where it can eventually be deployed on the Explore California web site. That gives an idea of the process which you go through when you're collaborating with the coworkers.
 
-git push
+git push                      <--now everyone else can see the changes Lynda and I did
 
 It may change because you may be collaborating with three or four different people, you may all be checking in and out things, but it's the same basic kind of process over and over again. It may seem like a lot to remember when you're a beginner, but it becomes second nature very quickly. 
 
