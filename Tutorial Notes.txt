@@ -1,0 +1,1359 @@
+=========================Chapter 1===WHAT IS GIT===================
+UNDERSTANDING VERSION CONTROL
+THE HISTORY OF GIT
+ABOUT DIRSTIBUTED VERSION CONTROL
+WHO SHOULD USE GIT
+
+=========================Chapter 2===INSTALLING GIT===================
+INTALLING GIT===================
+
+GIT CONFIGURATION===================
+*SYSTEM  
+/etc/gitconfig
+program files\git\etc\gitconfig
+
+*USER
+~/.gitconfig
+$HOME\.gitconfig
+    \users\maclean\.gitconfig
+
+*PROJET only
+my_project/.git/config
+
+How to modigy
+git config --system
+git config -- global         user
+git config
+
+eg 
+git config --gloval user.name "Rick Mac"
+                                  user.email  "xzy@place.com"
+git config --list
+git config --global core.editor "notepad.exe"
+git config --global color.ui true
+
+
+git config user.email   to see it
+
+git config --global core.editor "notepad++"    should I do this? It is not in my config
+git config --global core.editor "mae -wl1"     one for Linux
+
+USING GIT HELP===============
+git help log   (windows this just launches in Chrome)
+  f b q
+www.kernel.org/pub/software/scm/git/docs/
+
+=========================Chapter 3===GETTING STARTED=========================
+Initializing a Repo====================
+make folder
+goto folder
+git init   creates .git folder
+   contains hooks, info, objects, refs, config, description, HEAD
+   only make changes for the config file but should not edit directly
+   everything git does happens in this directory to track what is happening
+   
+Performing your first commit=============================
+1) create file
+2) git add .   to add all files
+3) git commit -m "Initial commit"     -m for message
+
+BASIC CYCLE/FLOW
+1) make the changes
+2) add the changes
+3) commit changes to the repository with a message
+
+WRITING COMMIT MESSAGES============================
+--describe the changes you made
+-short single-line summary (< 50 chars)
+-optionally followed by a blank line and more complete description (<72 chars)
+-present tense (not what you did, not about YOU)  eg fixes the bug that....
+--add ticket tracking number or bugfix: or ??? standard we all agree to
+
+Be clear and descriptive
+Bad: "Update login code"
+Good "Change user authentication to use Blowfish"
+Bad: do not use for messsages to other users 
+
+t23094 - Fixes but in admin logout
+
+When the admin....describe the problem.  And etc etc 
+describe the solution
+
+NOTE********  Mary needs to know if she wants to incorporate this Commit Snapshot to her repo 
+
+VIEWING THE COMMITE LOG============================
+git log
+
+use git log to see what everyone has done on the project
+git log -n 10  return that many logs
+git log -n 0
+git log --since=2015-02-21
+git log --until=2015-02-21
+git log --author="Rick"  any with that inside name
+git log --author="Joe"
+git log --grep="Init"   any commits that contain this in message
+
+
+=========================Chapter 4===CONCEPTS AND ARCHITECTURE===================
+Exploring the three-trees architecture=============================
+
+TWO-TREE ARCHITECTURE (typical)
+			repository  (similar structure)
+			
+			working (top folder with sub-folders)
+	checkout on my working copy (save and have not committed yet)
+	commit to my repository
+	if shared repo I might not have all the changes other people have committed
+	
+THREE-TREE ARCHITECTURE (staging index)
+			repository  (similar structure, folders and subfolder)
+			
+			staging index
+			
+			working (top folder with sub-folders)
+			
+working --git add file.txt--> Staging Index --git commit file.txt--> repository
+
+can to same to PULL out  
+repo --> staging --> working
+BUT NORMALLY
+repo --pull--> working   this will update the staging area when we do this.
+
+THE GIT WORKFLOW ===========================
+new file
+    repo
+	staging index
+	working
+	
+git add file.txt    (change set A)
+git add .  (add everything that has changed  to staging index)
+git commit  pushes A to the repo
+
+edit to file (change set B and C)
+	repo			A B C
+	staging index	B C
+	working			B C
+	
+USING HASH VALUES (SHA-1)======================
+referring to commits A B C 
+	--each change set can be a snapshot of changes to # files
+	
+KEY IDEA  checksum
+-Git generates a checksum for each change set
+   -checksum algorithms convert data into a simple number
+   -same data always equals the same checksum (therefore changes in data result in same checksum)
+-data integrity is fundamental
+   -if the data changed then the checksum will change
+--Git uses the SHA-1 hash algorithm to create checksums
+   -40 char hex string (0-9-A-F)
+   
+--Referring to commits
+snapshot A
+  SHA-1#A.....
+  parent nil
+  author John
+  message Initial commit
+  
+snapshot B
+  SHA-1#B.....
+  parent SHA-1#A.....
+  author John
+  message Add feature...
+  
+snapshot C
+   SHA-1#C
+   parent SHA-1#B
+   author John
+   message Fix Bug...
+   
+Working with the HEAD pointer=========================
+Git maintains a reference pointer called HEAD (points to a specific in the repo)
+--as we make new commits the pointer changes to move the 
+*pointer to the "tip" of current branch in repository (NOT stagingIndex or workingDirectory )
+*last state of repository, what was last checked out
+*points to parent of next commit
+   -where writing commits takes place 
+      (think of current location of tape HEAD where we will record next)
+	  (we can move the HEAD around and where we move it is where we will record next)
+	  (It is the place we left off in our repository for the things we have committed)
+	  
+eg for A B COMMIT
+master branch
+5c15e8 38e73d a614b5
+                |
+				HEAD (points to the tip of the current branch in our repo)
+				     (the last commit we made)(parent of next commit)
+					 
+new branch (with own commits separate from master) we can switch between branches (checkout)
+84c46a cce979 f36de
+				|
+				HEAD
+				
+HEAD always points to the TIP of the currently checked out branch from the repo
+
+
+git log HEAD  
+
+.git\HEAD  references the branch
+ref: refs/heads/master
+
+refs/heads/master
+5de8bbd6b04612c19614f19c8f0fbdda415d1113  the current TIP SHA# for the branch
+
+=========================Chapter 5===MAKING CHANGES TO FILES==================
+Adding files====================
+git status (what is the status between 3 trees repo, stage, working)
+git add second.txt
+git commit -m "Add second file"
+
+git add third.txt
+git commit -m "Add third file"
+
+git add third.txt
+git status
+
+Editing files=====================
+change a file
+git add first.txt
+git commit -m "made changes to first file"
+etc etc etc
+
+Viewing changes with diff====================
+git diff
+NOTE:  shows old file then new  --- +++
+It shows line by line what changed even in only part of a line changed.
+For large files it highlights just the particular lines that were changed.
+Shows ALL files that have changed
+
+git diff first.txt
+will only diff on that file
+
+Viewing only staged changes========================
+on staging index
+after changes to borth 1st and 3rd do...
+git add first_file.txt
+git status
+git diff (only checks Working vs Repository)
+git diff --staged
+
+Deleting files=============================
+create  fileToDelete1.txt and fileToDelete1.txt
+git add .
+git commit -m "add 'red shirt' files"
+now delete fileToDelete1.txt
+git status
+git rm fileToDelete1.txt
+git status shows it as ready to be deleted
+git commit -m "Delete first red shirt time fileToDelete1.txt"
+
+git rm FileToDelete2.txt  (same as removing file and putting in staging)
+
+Moving and renaming files=====moving and renaming are the same=====================
+let git handle things in the OS for us or just do it in OS and give commands from git
+eg ren first_file.txt primary_file.txt
+git add primaty_file.txt
+git rm first_file.txt
+git status will see it was a rename
+
+another way use git
+git mv second_file secondary_file.txt
+git status
+
+create folder
+git mv third_file.txt FirstDirectory
+git status
+
+git commit -m "Reorganizing files structure by moving files"
+
+
+=========================Chapter 6===USING GIT WITH A REAL PROJECT==================
+
+Introducing the Explore California web site=============================
+
+Initializing Git====================================
+the california file was not a git repo
+therefore do
+git init
+
+--now no HEAD since no head was established
+sooo
+git add .
+git commit -m "initial commit"
+
+Note: I can have 20 web sites and each one is a separate Git repo
+
+Editing the support phone number=========================
+used Notepad++ to do a change all on all places 4315 is and changed to 4314
+Next
+could do this
+git add .
+or 
+git commit -a   (only for files that are modified)  therefore
+git commit -am "doing commit of the 24 hour conact number to 4314"
+
+Editing the backpack file name and links===============================
+mv tours/tour_detail_backpack.html tours/tour_detail_backpack_cal.html
+git status
+next changed files to reference the correct fileName. Then we see a number of files ready to commit
+now 
+git add tours   (add to staging)
+git add tours/  (add all in folder to staging)
+
+made changes to contacts.html too. It makes sense to do this as two commits and not one.
+git commit -m "Renamed backpack cal file and references"
+git commit -am "Removed contractions from contacts.html page"
+
+
+=========================Chapter 7===UNDOING CHANGES==================
+Undo what I just did woops
+
+Undoing working directory changes=========================
+deleted section of index.html and want to get it backpack
+git checkout -- index.html  (the -- says stay on same branch)(blow away changes and get file in repo)
+
+Unstaging files---------------------------------
+change resources.html save
+git add resources.html
+git status
+
+unstage this file
+git reset HEAD resources.html
+
+Amending commits================================
+undoing commits is trickier
+this is because the HASH gets changed if we make a change to a 
+commit because the contents change and SHA changes too
+
+Every SHA in every commit will change if we do it in earlier ones. BUT we can make a change to the last 
+commit. If we want to undo older changes then redo it and do a new commit.
+
+eg
+git add resources.html
+git commit -m "Changes to resources.html"
+MAKE another change
+now we want this added to the last commit
+git commit --amend -m "Rearrange the items to bring on the trip"
+
+Retrieving old versions================================
+If we want to undo older changes then redo it and do a new commit.
+We can checkout a version of a file from an older commit by referencing the SHA or part of it
+git checkout fc784620 -- resources.html   (this will get the version of this file from that SHA)
+                                         don't forget the -- dashdash
+										it puts the file in staging area when doing this
+git status
+then we can commit it since it is in the staged area
+git commit -m "undo previous change on resources.html  refer to SHA for the undo in here too"
+
+BUT for next movie we will want to get rid of all this so we can see a different commands
+soooo
+git reset HEAD resources.html
+git checkout -- resources.html
+
+Reverting a commit================================
+we can reverse all the changes in a commit
+git revert SHA
+
+for complex changes we are actually doing a merge
+
+Using reset to undo commits=============================
+VERY DANDEROUS
+
+git reset  <--decide where to have HEAD pointer to point to.  Wipe out more recent commits
+           <--always moves the HEAD pointer
+		   <--- soft, does not change the staging index or working directory
+		           so everything now as a diff will just diff with the SHA place
+		   <--- mixed (default)
+				changes staging index to match repository
+				does not change the working directory
+			<--- hard
+				changes staging index and working directory to match repository
+				    use only when something has gone really badly and we want to wipe our all changes
+
+Demonstrating a soft reset=====================
+git reset --soft 7a5500a61  <-- moves the HEAD pointer to that SHA
+
+Demonstrating a mixed reset=====================
+git reset --mixed 7a5500a61  <-- moves the HEAD pointer to that SHA and sets staging area to repo
+
+Demonstrating a hard reset=========================
+git reset --hard SHA
+
+Removing untracked files===============================
+what if you have a bunch of garbage files created
+git clean -n  <--trial run
+git clean -f  <--forces it to run since it will delete things
+
+what if we do
+git add junk1.txt
+=========================Chapter 8===IGNORING FILES==================
+
+Using gitignore files=======================
+project/.gitignore
+   can use regular exp    * ? [aeiou] [0-9]
+   negate expressions with !
+   *.php
+   !index.php
+   ignore all files in a directory with trailing slash
+      assets/videos/
+   comment lines begin with #, blank liens are skipped
+   
+eg
+#Comment
+tempfile.txt
+# *.txt
+.DS_Store
+*.zip
+*.gz
+log/*.log
+log/*.log.[0-9]
+assets/photoshop/
+assets/viedos/
+!assets/videos/tour_*.mp4
+
+#question: would log/archive/access.log be ignored?   <--no 
+
+Understanding what you ignore========================
+*compiled source code*
+*packages and compressed files
+*logs and databases (files that change often)
+*operating system generated files
+*user-uploaded assets (images, PDFs, videos)
+TIPS
+https://help.github.com/articles/ignoring-files
+https://github.com/github/gitignore
+
+Ignoring files globally=========================
+*ignore files on all repository
+*setting not tracked in repo
+*user-specific instead of repo-specific
+git config --global core.excludesfile ~/.gitignore_global  <--can be any file I want it to be
+git config --global core.excludesfile D:\MacLean\Git Essentials\GitRepos\.gitignoreRick_global
+
+Ignoring tracked files=========================
+what if we want to untrack a file that is already being tracked. ignore will not work
+add tempfile2.txt
+add and commit
+change .gitignore to ignore it 
+make changes and .gitignore did not take since tracking overrides .gitignore
+
+what to stop tracking now???
+git rm --cached tempfile2.txt   (this will stop it being tracked in the staging index)
+
+git commit -m "Remove tempfile2.txt from staging index"
+
+Tracking empty directories=======================
+.git is designed to be a file-tracking system (not empty folders)
+   tracks files
+   tracks the directories it takes to get to files
+   ignores directories with no files
+ Therefore just put some kind of file in there...
+.gitkeep
+
+eg add folder 
+assest/pdfs
+next add file .gitkeep
+git status shows folder pdfs
+soooo do
+git add assets/pdfs/
+git commit -m "Add 'emtpty' directory with .gitkeep file in it"
+
+
+=========================Chapter 9===NAVIGATING THE COMMIT TREE==================
+Referencing commits=====================
+treeish something that reverences the tree... ish sort of
+tree-ish
+    full SHA-1 hash
+	short SHA-1 hash   (at least 4 characters, unambiguous (8-10 chars))
+	HEAD pointer       ( The HEAD pointer remember always points to the commit 
+						that's at the tip of the currently checked out branch.)
+	branch reference, tag reference
+	
+	parent commit (ancestry)
+	  eg HEAD^, acf87504^,  master^   (parent of this commit)
+	  eg HEAD~1, HEAD~                (give number for how many generations back)
+	grandparent commit (ancestry)
+	  eg HEAD^^, acf87504^^,  master^^   (parent of this commit)
+	  eg HEAD~2,                (give number for how many generations back)
+	etc...
+	
+Exploring tree listings======================
+git ls-tree <tree-ish>
+git ls-tree HEAD
+git ls-tree master
+git ls-tree master assets/ 
+git ls-tree master^ assets/ 
+git ls-tree 6fa98b83 (SHA of assets)
+
+blob is a file
+tree is a directory
+
+Getting more from the commit log================
+some helpful things for git log
+git log --oneline
+git log --oneline -3 
+git log --since="2014-06-12"
+git log --until=""
+git log --since="3 weeks ago"
+git log --author="maclean"
+git log --grep="temp"
+git log 2904cd..7a5500a61 --oneline  range of commits
+git log 33593ce.. index.html   <--what changes have happened to this time since then?
+git log 7297614.. index.html
+git log -p 7297614.. index.html   <-- -p shows the diffs
+git log --stat  --summary        <--shows stats on each commit 
+git log --format=oneline       <-- other options: short, medium, full, fuller, email, raw
+git log --graph              <--graph of each commit, will show branches
+
+git log --oneline --graph --all --decorate
+
+Viewing commits======================
+see specific commit
+git show sha       <--gives the diffs too 
+
+git show HEAD~3
+
+can also do show for files and folders but need the SHA for this
+git show assets/
+git show 9e874297  (SHA of index.html)
+
+Comparing commits=====================
+state of all the files in the directory is compared to see what has changed 
+compare commits
+compare branches 
+we use DIFF
+git diff SHA   compare working directory with this SHA
+
+git diff 3359
+git diff 3359 tours.html 
+
+git diff SHA..SHA   what changed between these two 
+git diff SHA..SHA  tours
+git diff SHA..HEAD 
+git diff SHA..HEAD^^ 
+
+useful ones 
+git diff  --stat --summary SHA..HEAD 
+git diff  --stat --summary SHA..HEAD 
+git diff  -b SHA..HEAD <--ignore space changes 
+git diff  -w SHA..HEAD <--ignore all spaces
+
+=========================Chapter 10===BRANCHING==================
+Branching overview======================
+Branches are one of the most powerful features in Git, in large part because of 
+how easy they are to use. It's as if Git wants you to branch, and getting the 
+most out of Git will mean using branches often and effectively. In Git, branches 
+are cheap, and what we mean by that is that they don't cause a lot of headaches. 
+They don't take a lot of processor power. They don't take up a lot of storage space. 
+They are easy to create. They are easy to delete. They are easy to work with. 
+And they allow you to then try new ideas. Let's imagine that you have your master 
+branch that you are working on and suddenly you get an idea for something, but you 
+are not sure if it's going to work out or not, instead of making lots of commits 
+to your master branch and then trying to undo those if it doesn't work out, 
+instead you just create a new branch, try your new ideas there.
+
+If those ideas don't work out, you just throw away the branch, and you haven't 
+tainted your master timeline with those mistakes at all.
+
+branches are cheap 
+   try new ideas 
+   isolate features or sections of work 
+one working directory 
+fast context switching 
+
+master sha sha sha sha 
+revise navigation branch sha 
+now merge in changes  creates a new commit with a new SHA 
+can have many branches 
+
+**** WHERE IS HEAD POINTER
+create branch and HEAD is at same SHA until commit is made then HEAD is on branch SHA
+
+Viewing and creating branches======================
+git branch <--shows all branches on machine
+
+when I new branch is created it creates a file in 
+refs/heads folder with the branch name and the SHA in that branch for HEAD 
+ls -la .git/refs/heads
+
+create a branch 
+git branch new_feature 
+cat .git/refs/heads/new_feature 
+
+Switching branches======================
+git checkout new_feature 
+cat .git/HEAD 
+
+tips are the same now....
+now change index.html 
+git commit -am "Save change to title in index.html"
+
+Creating and switching branches======================
+git branch new_feature
+git show HEAD
+git checkout -b shorten_title  <--create and switch to new branch off of new_feature
+make more changes to index.html
+add
+commit
+
+now we have 3 branches....
+
+Switching branches with uncommitted changes ======================
+stash????
+change index.html again
+git checkout master     <---error warning about overwriting changes if I do this
+git commit -am "Swap our - for : in index.html title"
+
+now add tempfile3.txt  and we can switch between branches since this file is not tracked and 
+						we won't loose and data. 
+						
+Comparing branches ======================
+git diff master..new_feature    compares the tips of each of these branches 
+git diff master..shorted_title   order of them would change the results 
+git diff --color-words master..shorted_title  <--puts changes on one line
+
+git diff master..shorted_title^
+
+
+There is one more important way that we can compare branches, and that's 
+that we can find out, whether one branch completely contains another branch 
+or not. That is whether or not everything in it has been merged into the 
+current branch. We do that by not using the diff tool but using git branch 
+with the dash dash merged option after it. 
+git branch --merged   <--this lists the branches that have commits which are in the current branch
+					<--shows master and new_feature
+					<--we could delete new_feature and not loose all the changes 
+					
+git checkout new_feature
+git branch --merged  <--just shows master
+
+Renaming branches ======================
+git branch -m new_feature searchEngineOptimization-TItle
+git branch --move new_feature searchEngineOptimization-TItle
+
+Deleting branches ======================
+git checkout master
+git branch branch_to_delete
+git branch -d branch_to_delete
+
+that easy...now lets to it again...with changes in it
+git branch branch_to_delete
+git checkout branch_to_delete
+git branch -d branch_to_delete   cannot delete it if on this
+
+add a change and commit
+switch to master
+try to delete and cannot do it
+git branch -D branch_to_delete    will override 
+
+Configuring the command prompt to show the branch ======================
+on Linux you need this file in your global area
+ .git-completion.bash
+ this give you  __git_ps1 as a command
+ 
+ echo $PS1
+ 
+ export PS1='$(__git_ps1 "(%s)") > ' 
+ now add this to .bash_profile  and paste this in after .git-completion.bash
+ 
+ ======================now on Windows   it might already be done
+ create .bash_profile and put in the same command
+  export PS1='$(__git_ps1 "(%s)") > ' 
+  
+=========================Chapter 11===MERGING BRANCHES==================
+Merging code ======================
+from one branch to another
+1) move to branch which will receive the changes
+git branch master
+git merge seo_Title  <--this merges in the changes (was a fast-forward merge )
+git diff master..seo_Title
+now
+git branch -d seo_Title
+
+Using fast-forward merge vs. true merge ======================
+If master has changes in it since seo_Title was made then we need to merge diffs
+eg
+change index in master and seo_Title 
+
+can do this
+git merge --no-ff branch  <--not fast-forward but make a new commit for the merge (document this)
+git merge --ff-only branch  <--safe only do if you can do a ff
+
+eg
+now let's merge in shorten_title  <--we want to force non ff so do a commit on master
+1) change contact.html on master
+2) do commit
+3) git log --oneline -3  show just 3 lines
+4) git log shorten_title --oneline -3   shows different commits
+5) git merge shorten_title  <--pulls up editor (only if I have an editor defined)
+6) this worked easily since no conflicts
+
+Merging conflicts ======================
+eg change index.html in two branches in different locations of the file.
+git can do an automatic merge
+BUT if two changes to a set of lines together.
+
+git does not know which ones to choose.
+1) mission.html page
+2) git checkout -b text_edits
+3) make changes to mission.html
+
+git checkout master
+1) change mission.html in same lines and commit
+2) sha's are different
+
+NOW!
+git merge text_edits    <---git shows the conflicts in the missions.html file which
+							which I will have to resolve them
+							
+It looks like this.
+<<<<<<< HEAD
+            <p>We are passionate about California and preserving the abundant resources that make it so unique. Our goal at Explore California is to transform your vacation into an adventure that will educate, inspire, and energize you unlike any other.</p> 
+            <p>Our tours are crafted around our central mission, and are designed to engage you in a unique and fulfilling way. All our tours are sensitive to the environment, and will provide you will an opportunity to explore California in your own way.</p>
+            <p>We&rsquo;ve been asked before how we choose our tours. It's simple really, we approach our tours as the enthusiasts we are! When we scout for locations, choose tour options, or explore the surrounding area for exciting side-tours, we ask ourselves one question, &ldquo;is this something we would want to do?&rdquo; We also look very carefully at a tour's potential impact. We choose tours that are as environmentally sensitive as we are, and that expose people to amazing diversity of California's people, places, and wildlife!</p>
+            <p>We&rsquo;ve also worked very hard to make Explore California more than just a tour company. <a href="explorers/join.html">Join our community</a> and become part of the conversation. Recommend tours, blog about your journeys, and share pictures and video with other tour members.</p>
+=======
+            <p>We are passionate about California and preserving the abundant resources that make it so unique. Our goal at Explore California is to transform your vacation into an adventure that will educate, inspire, and energize you.</p> 
+            <p>Our tours are crafted around our central mission, and are designed to engage you in a unique and fulfilling way. All our tours are environmentally sensitive to the environment, and will provide you will an opportunity to explore California in your own way.</p>
+            <p>We have been asked before how we choose our tours. It's simple really, we approach our tours as the enthusiasts we are! When we scout for locations, choose tour options, or explore the surrounding area for exciting side-tours, we ask ourselves a question, &quot;is this something we would want to do?&quot; We also look very carefully at a tour's potential impact. We choose tours that are as environmentally sensitive as we are, and that expose people to amazing diversity of California's people, places, and wildlife!</p>
+            <p>We have also worked very hard to make Explore California more than just a tour company. <a href="explorers/join.html">Join our community</a> and become part of the conversation. Recommend tours, blog about your journeys, and share pictures and video with other tour members.</p>
+>>>>>>> text_edits
+
+Resolving merge conflicts ======================
+How to do it.....
+1) abort the merge
+2) resolve the conflicts manually  (first learn how to do this before using tools)
+3) use a merge tool
+
+1) git merge --abort
+2) do it again  
+git merge text_edits
+2a) now merge manually
+2b) add and commit the result
+git add mission.html
+git status
+git commit   <--do not need message  (modify the message since conflicts are gone and save)
+git log --oneline
+
+git branch --merged   shows things are ok
+
+now gry 
+git log --graph --oneline --all --decorate 
+
+can also use this
+git mergetool --tool=nameOfTool
+git mergetool   will show all the tools I can use 
+
+
+Exploring strategies to reduce merge conflicts ======================
+keep lines short 
+keep commits small and focused 
+beware stray edits to whitespace 
+   spaces, tabs, line returns 
+KEY***>merge often with master --so you can keep working on branch but merge often to 
+		avoid huge diffs 
+KEY***>track changes to master (keep getting those changes from master while on branch)
+=========================Chapter 12===STASHING CHANGES==================
+Saving changes in the stash ======================
+In this chapter we're going to learn about a future of Git called the stash. 
+The stash is a place where we can store changes temporarily without having to commit 
+them to the repository. It's a lot like putting something into a drawer to save it for 
+later. The stash is not part of the repository, the staging index or the working directory, 
+it's a special fourth area in Git, separate from the others. And the things that we put into 
+it aren't commits, but they're a lot like commits, they work in a very similar way. They're 
+still a snapshot of the changes that we were in the process of making, just like a commit is.
+
+git checkout shorten_title
+git branch --merged 
+Not edit mission.html title
+git status 
+git checkout master  <--cannot do it 
+git stash save  "changed mission page title"
+git status 
+git log --oneline -3 
+
+Viewing stashed changed ======================
+git stash list <--now do it  NOTE: referred to by stash@{0}
+now switch to master and we can still see what is in the stash when over there
+
+see more this way
+git stash show stash@{0}
+git stash show -p stash@{0}   <---patch....show the edits DIFF 
+
+Retrieving stashed changes ======================
+ NOTE If we put them in the drawer before, now we want to get them back out of 
+ the drawer, and when we do that it's going to bring those changes back 
+ into our working directory, whatever that working directory is, whichever 
+ branch we're on.
+ 
+ We could stash when on a branch and get from the stash when on master for example.
+ 
+ So it doesn't matter which branch you're on, it's going to try to bring them into 
+ your working directory and apply those changes. Like with merges, there's the 
+ possibility that there may be conflicts that those changes don't apply cleanly, 
+ and in that case it works like merge does. It does its best to try and figure 
+ out how to merge the changes, but if not, then there will be conflicts, and 
+ it'll be up to you to resolve those conflicts.
+ 
+ git stash pop      removes from the stash (most common)
+ git stash apply    keeps it there so we can apply it to other branches 
+ git stash pop   stash@{0}    pops the top one
+ git stash pop   stash@{2}     pop the 3rd one
+ 
+ let's stash it again
+ git stash save  "changed mission page title"
+ git checkout shorten_title 
+ git stash apply 
+ git stash list 
+  
+Deleting stashed changes ======================
+git stash list 
+git stash drop stash@{0}   <--a particular stash 
+
+now edit tours.html save it 
+git status
+git stash save  "Changed mission & tours page title"
+git stash list 
+
+now change explorers.html
+git stash save "Fixed typo in explorers page."
+
+now delete everything in the stash... 
+git stash clear 
+
+
+
+=========================Chapter 13===REMOTES==================
+Using local and remote repositories ======================
+The concept is that there is a remote server, and we'll take our changes that 
+we've made and put them on that remote server so that other people can then 
+see them. They can then download the changes that we've made to their repositories, 
+they can make changes of their own, upload those back to the remote server, and 
+we can pull those back down into our repository to get their changes.
+
+It makes this remote repository sort of a central clearing house for all of 
+these different changes that are going on, and that remote server is just simply a 
+Git repository. Remember that Git is distributed version control. There's no real 
+difference between the different repositories, so there's not a big difference between 
+the server and our computer or the client. The only difference really is that the server 
+is running some Git software that allows it to communicate with lots of different Git 
+clients at the same time, but the actual repository where those changes are being stored, 
+is just simply a Git repository; it has commits, it has branches, it has a HEAD pointer. 
+It works exactly the same, and the fact that that Git repository is the central clearing 
+house is really just a matter of convention.
+
+What we want to do is take our commits and put them on the remote server, so other 
+people can see them. The process that we used to do that is called a push. So we push 
+our changes to the remote server, or you can say you pushed them up to the remote server.
+
+PUSH to server 
+1) it creates a duplicate of our repo on the remote server 
+2) it creates a branch on our computer called     origin/master
+
+At that point, the remote server creates the same branch with the same commits 
+with the exact same commit IDs referring to all of them, at that point our 
+collaborators have the ability to see our commits. At the same time, Git 
+also makes another branch on our local computer that is typically called 
+origin slash and then whatever the branch name is. Now that's by convention, 
+we'll talk about how we can change that name, it doesn't have to be origins, 
+but in this case we'll stick with the default. So origin/master is a branch on 
+our local machine that references the remote server branch, and it always tries 
+to stay and sync with that. Right now it looks like all three of them are in sync, 
+but it doesn't always have to be that way.
+
+fetch 
+   then 
+merge
+
+We continue developing, we makes some more commits on our master branch when we're 
+ready to share those commits, again, we do a push, so we push that code up to the 
+remote server, and it makes note of the change also in our origin/master branch, 
+the one that tries to stay in sync with the remote one. When other people make 
+changes to the remote server and contribute them there, we need to pull those 
+changes down so that we know about them, and the way that we do that is with 
+what's called a fetch. So we fetch the changes, at that point they come into 
+our origin master branch, because what we're doing is keeping those in sync. 
+Fetch is essentially saying sync up my origin master with the remote server 
+version, but it does not bring it into our master branch.
+
+Now our computer knows about the change, we have it locally, if we get on an 
+airplanes and fly somewhere while we're on the airplane, we'll have a copy of 
+that commit that 923ea, but it won't be in our master branch until we do a merge, 
+and at that point then it'll be brought in to our master branch, and we'll be back 
+in sync. Now this is an over simplified example, because you might notice that on 
+my computer I have lots of duplicates. You can see that I have those same Git 
+objects listed twice on my own computer. In realty, it doesn't store them twice. 
+Git is smart about reusing these objects, because they're exactly the same.
+
+So Git uses pointers instead, to point to that, and we know about the HEAD pointer. 
+So let's take a quick look at how that works just to make sure that that's clear. 
+I think for illustrative purposes, it was good to see it as two separate branches 
+with two sets of commits. But in reality, we have a HEAD pointer for master that 
+points to the third commit, when we do a push and push it through remote server, 
+it creates the commits there, and moves the HEAD pointer for master to the third 
+commit, and then also adds another pointer that points to the same commit on our 
+local computer. It doesn't actually duplicate those three objects.
+
+When we then make a new commit, it moves our master pointer to the commit, when we 
+do a push it creates that new object on the remote server and moves the pointer, 
+and also increments origin/master. Then when new changes come into the remote server 
+from someone else, of course, it moves the master pointer to point to that latest 
+commit. When we do a fetch, it brings that new Git object down onto our computer 
+and moves the origin pointer to point to it, but our master ones still doesn't. 
+We have to first do a merge, and we know that would be a fast- forward merge, 
+that's what we would call that, in this case where it just moves all the way to 
+point to the same commit.
+
+So as you can probably see, origin/master really is just a branch, it's just like 
+the other branches that we're working with. The only difference is that it tries 
+to stay in sync with what's on the remote server. The reason that matters is 
+because it is possible for someone to make a commit on the remote server while 
+we're in the process of making a commit on our local machine. All right, it happens 
+all the time. I'm making changes to one part of the project, my collaborator is 
+making changes to their part of the project, they put theirs up on the remote 
+server, my origin master, once I do a fetch, the state of our two servers would 
+look something like this.
+
+You'll see that origin/master does still include those objects that are in the 
+remote branch, it did stay in sync with that, but in the meantime I've got a new 
+commit called ba8ce. So now that our two branches have diverged, we need to do a 
+merge to bring them back together again, and that process works exactly the same 
+way as we saw when we were working with emerging branches. Origin/master is just 
+a branch, so we can merge them together and then the next time we do a push, our 
+master changes will be merged in and sent off to the remote server.
+
+So generally speaking, the process that you go through when you're working with a 
+remote, is that you'll do your commits locally, then you'll fetch the latest from 
+the remote server, get your origin branch in sync, then merge any of the new work 
+you did into what just came down from the server and then push the result back up 
+to the remote server. If the process seems at all unclear now, it'll become second 
+nature soon enough.
+
+
+Setting up a GitHub account ======================
+GitHub 
+  most popular Git host 
+  free and inexpensive hosting plans
+  many great features (charts and graphs....)
+  
+create username and password etc 
+create a new repo
+can often do it with a README and can add gitignore file for us based on type (let's just create it)
+
+continue...and select   push an existing one and we can just push our one. Use the HTTP one
+NOTE: use the commands they suggest
+git remote add origin https://github.com/rick-maclean/explore_california.git
+git push -u origin master 
+
+Adding a remote repository ======================
+not tell our local one where to find it on github
+
+git remote   <--shows all remotes our repo knows about which are none now
+git remote add <alias> <url>    what we want to call it and where to find it.
+git remote add origin https://github.com/rick-maclean/explore_california.git
+git remote add github https://github.com/rick-maclean/explore_california.git  could do github
+   now our local repo knows about the remote one
+   
+git remote 
+git remote -v
+git remote rm origin  (this will remove it from my local repo)
+
+Creating a remote branch ======================
+git push -u origin master      push this branch onto the corresponding branch on the remote server
+                             push to 'origin' the local branch 'master' on the remote server
+							 
+			asks for rick-maclean and password 
+			-u causes the tracking 
+
+cat .git/config    <--shows details of the remote repo
+ls -la .git/refs/remotes   <--shows where it stores these and have 
+cat .git/refs/remotes/master  <--shows the SHA of the repo
+
+git branch -r  <--shows remote branchs
+git branch -a  <--shows All
+
+Cloning a remote repository ======================
+This is the normal way we do things.  Clone one that someone else has created or we just 
+want to get our repo onto another computer 
+
+go to github and find one I want.
+
+git clone https://.....     name_I_choose_for_directory
+git clone https://github.com/rick-maclean/explore_california.git ricks_clone
+git branch  <--will only get the master branch
+git clone -b for branch will get a particular branch
+
+Tracking remote branches ========AUTOMATICALLY==============
+pull updates from master regularly
+
+Now tracking is really common with remote branches, and it works in a similar way, 
+plus with a little bit of configuration, we get to save ourselves some typing by 
+letting the master branch know what remote branch should it be using when it's 
+doing its fetch, and when it's doing it's push. We won't have to specify it each 
+and every time.
+
+Now when we did our first Git push, we did it with the -u option
+
+If we don't do git push with the -u option, it does not track any remote branch. 
+All it does is push our code up there, and that's it. It doesn't keep any kind 
+of reference that this is the branch there we're going to be working with in 
+the future. The -u option says push it up there, and also make a note of the 
+fact because we're going to be coming back and working with this branch 
+frequently. When we did a git clone to create our lynda_ version, it does 
+track the remote branch, and we can see that tracking here, git/config. You 
+can see that our branch master is set up to track the refs/heads/master that's 
+on origin.
+
+cat .git/config  <--see this in ricks_clone and the original one
+
+now do this
+git branch non_tracking
+git push origin non_tracking   <--puts it up there but does not track it.
+cat .git/config 
+
+to make it tracking we can do this
+git config branch.non_tracking.remote origin 
+OR do this
+git branch --set-upstream non_tracking origin/non_tracking  <--we are not going to do this
+
+Pushing changes to a remote repository ======================
+modify tours.html to change a link to another html file
+change all Detail to _detail
+
+git status
+git commit -am  "Change file/link format on tours.html." 
+
+git log --oneline
+git log --oneline origin/master  <--shows this is not on my copy of remote 
+
+NOW PUSH
+git push origin master  <--can do this but can just do
+git push                <--since it is tracking  (it pushes it to the remote repo)
+                can see this on GitHub
+				click on the commit on GitHub and see what changed 
+
+NOW GOTO LYNDA
+cd ..
+cd ricks_clone 
+git log --oneline origin/master  does not show the most recent commit THEREFORE fetch
+
+Fetching changes from a remote repo ======================
+cd ricks_clone 
+git log --oneline origin/master  does not show the most recent commit THEREFORE fetch
+git branch 
+git branch -r  <--does not show the new branch we pushed up there from the default repo 
+
+git fetch   <--synch with remote repo 
+OR 
+git fetch origin  <--if we have more than one remote repo 
+
+now 
+git log --oneline origin/master  shows the new commit 
+git log --oneline master         does not change master but only the copy of the remote 
+
+3 RULES
+fetch first thing in morning  before you work 
+fetch before you push
+fetch often            <--it is not going to hurt what I have in my master branch
+
+Merging in fetched changes ======================
+after fetch to origin/master  my local copy of the remote....I can merge in those commits
+
+In the last movie, we used git fetch in order to sync up origin/master with the 
+master branch on the remote repository, but we noticed that while it brought 
+those commits down into origin/master, it didn't bring them into master on 
+our local repository. All it did was get origin/master in sync. If we want 
+those changes to be incorporated into our master branch, we need to do that 
+additional step ourselves, and that's we are going to learn how to do in 
+this movie, using merges. Now you will recall earlier that I told you that 
+origin/master is just a branch like any other branch.
+
+That's an important point to remember, because we are going to merge with it 
+just like any other branch. In this illustration, you can see that the remote 
+server has five commits in it, and a fetch has taken place, because origin/master 
+is perfectly in sync with what's on the remote server. Our master branch however 
+is two commits behind, so it needs to have those two commits added to it, and 
+the process that we do that is by merging, and the merging works exactly like 
+everything that we learned about merging before in the merging chapter. The 
+only difference is that we are using a branch called origin/master, instead 
+of some other branch name that we worked with before.
+
+But in this particular illustration, if we were to do a merge right now, master 
+would do a fast-forward merge just like the fast forward merges that we learned 
+about previously. Now if we made additional commits on the master branch, in 
+the meantime, then those would need to be merged in, and we would have a merge 
+commit that would join those together just like we did before. And of course, 
+it's also possible that the 923ea commit that's in origin/master has something 
+that conflicts with what we have got in ba8ce in our master branch, and if it 
+conflicts, well just like with the normal merge, we have got to resolve those 
+conflicts.
+
+But in this particular illustration, if we were to do a merge right now, 
+master would do a fast-forward merge just like the fast forward merges that 
+we learned about previously. Now if we made additional commits on the master 
+branch, in the meantime, then those would need to be merged in, and we would 
+have a merge commit that would join those together just like we did before. 
+And of course, it's also possible that the 923ea commit that's in origin/master 
+has something that conflicts with what we have got in ba8ce in our master branch, 
+and if it conflicts, well just like with the normal merge, we have got to resolve 
+those conflicts.
+
+git branch -a 
+git diff origin/master..master
+git merge origin/master             <--merge in this branch with the one I am on
+
+REMEMBER: do a fetch first before dong a merge 
+git pull = git fetch + git merge    <--it obscures what is happening and if things go wrong
+										it is hard to fix it. 
+
+
+Checking out remote branches ======================
+while on ricks_clone
+git branch -r  <--shows origin/non_tracking
+SOoooo
+git branch non_tracking origin/non_tracking  <--enables me to have a branch that is the same and tracks it 
+git branch   <--now shows it
+Now 
+cat .git/config  <--shows we are tracking "non_tracking"
+
+git branch -d non_tracking  <--can do this 
+
+can also do this 
+git checkout -b non_tracking  origin/non_tracking 
+
+Pushing to an updated remote branch ======================
+when a coworker has changed things on the remote repo
+
+Git never tries to do a merge during a push. Instead what Git says is, some 
+new stuff has come in. I'm not sure what to do about all this. You need to 
+fetch the changes that are on the remote server, then sort it out on your 
+end and come back and try again. So we do a fetch. We've got the new information 
+about what's on the remote server, we now see why there's a problem, oh, there 
+were some other commits there.
+
+Soooo first fetch then merge (and if there are conflicts resolve)
+1) fetch   (get coworkers changes)
+2) merge   (with coworkers on my origin/master)
+3) push     (now the remote server will accept it)
+
+Deleting a remote branch ======================
+older way 
+git push origin :non_tracking   <--deletes it 
+git branch -r 
+
+newer way 
+git push origin --delete non_tracking   <--this deletes it on the remote
+
+Enabling collaboration ======================
+In this movie I want to talk about how we can enable collaborators on your project 
+and also how you can become a collaborator to open source project. Now you maybe 
+thinking, well, wait a minute we've already been doing collaboration right? We have 
+our explore_california repository, and we have lynda_version, right? Those are two 
+people collaborating. Well, we have been kind of faking it, because the thing is both 
+of these repositories are logging into GitHub using the same set of credentials, in my 
+case they're both logging in as Kevin Skoglund. So I have two repositories pretending 
+to be two different people, but it's really the same GitHub user.
+
+What if we want other GitHub users to be able to access our project? The way we do 
+that is you go to the project homepage, and you click on Admin, it'll bring up a 
+page here with Collaborators as one of the options, and then we can start typing 
+the GitHub username of the person that we want to collaborate on it. Whatever the 
+person's name is it'll start looking it up. Obviously, I'm not going to add myself 
+to the project, I'm already part of it, but I'm just going to look up my username 
+just to see how it comes up. So there it is, you start typing and it starts narrowing 
+down the Kevin's until finally it finds my username.
+
+Once you add them to the project, then GitHub will send them an email telling 
+them that they been added to the repository, and also providing them with this URL 
+here so that they can then clone it and start working. And they'll have the ability 
+to both read and write to that project. So that's an important step in enabling people 
+to be able to work on your project with you.
+
+How about contributing to an OpenSource project????
+But everyone has read access, so everyone can see it, but not everyone can actually 
+make changes. Instead the way that you make changes is that you need to make a fork. 
+Now before you even make a fork, I suggest the first thing you do is decide what 
+changes you want to make, what contribution do you have to make. Look at the network, 
+make sure that someone else isn't already working on that change, make sure there is 
+not a branch that's dedicated to that change, and look through the issues list to see 
+if someone has posted there about the problem or the feature and maybe has even started 
+a discussion about it.
+
+There's no sense in duplicating someone else's effort. And then it's also good form 
+for you to post an issue there so that other people can see that you've already staked 
+out this territory. The next thing I want to do is make a fork of the project. This 
+will make your own version of the project on your own GitHub repository. It's no 
+longer part of the main one, and this one you will have write access to. So you go 
+ahead and clone the repository, work with it locally just like you normally would, 
+commit those changes up to your version of the project, and then once you got it 
+all done, it's ready to go, you go back to the GitHub page for the main project, 
+and you issue a Pull Request.
+
+Essentially a Pull Request is like raising your hand and saying I have something 
+here that I want to show you. You submit a message with your request so you identify 
+what the problem was that you saw, or what feature you decided you wanted to add, talk 
+about how you want to do it, and why you think it's good for the project, and if you 
+make the case effectively and your code looks good then they will accept your changes 
+and incorporate them into the main project. They'll grab your branch and merge it in. 
+And then at that point, everyone will have access to your new feature. So that's how 
+you can enable collaboration using Git. The process is little different if you're 
+going to give someone else read/write access or if you're going to work on a project 
+where you don't have write access.
+
+A collaboration workflow ======================
+In this movie, we will look at an example workflow showing how to use Git to collaborate with another user. My hope is that this kind of real-world example will help to give you a big picture and will pull together all the different pieces that we have learned. But we are not going to actually make the changes, that would take more time and would also keep you from seeing the workflows clearly. For this example, I am going to collaborate with my coworker Lynda on adding a new feature to the Explore California web site and our new feature will be a feedback form, so the customers of Explore California can share their comments and feedback.
+
+MY Work
+git checkout master
+git fetch 
+git merge origin/master 
+git checkout -b feedback_form 
+
+Let's start by looking at what my work would look like. Now this is an ongoing project. I've already got my repositories set up, and I have already pushed at least the master branch up to the remote repositories. So let's assume that we have already done that ahead of time, I am just logging in today to create this new feature. I am already on my master branch, if I'm not, then I will check out the master branch that I start there at master. And then the very first thing that we want to do every day, every time we start work, every time we have been away from the computer for a few hours, we want to do a git fetch.
+
+We want to find out what new commits have been made and pushed to the repository since the last time we checked in. So I do my git fetch, and it turns out that there was work done overnight by some of my coworkers. Their commits are unrelated to the feature that I'm about to add, but I still want to make sure that I have to master. So the next thing I want to do is I want to merge those changes which are in origin/master into my master branch. Now at this point, my branch of master is totally in sync with what's on the remote repository, and I am ready to start my work.
+
+I am going to do the work on my new feature in the separate branch, and that way it won't interfere with anything that's going on with master. And if in the end we decide not to do the feature for some reason, it's easy to just throw it away. So the next thing I want to do is create that branch, and I will do that using checkout -b that will check it out as a new branch, or create the branch and switch to it. So now even though the contents of my working directory are the same as master, I've switched to my new feedback form branch.
+
+So I open up my working directory, I make the changes that I want there, in this case I am going to be adding a page called feedback.html, and I go in, and I edit the form and get it all look exactly like I want. When I am done, then I am ready to make my commit. So I add it to the staging area, and then I commit it. At this point, my changes are now on my local repository inside my feedback form branch. I am not ready to merge them into master just yet, I want my coworker Lynda to have a look at them as well. So I need to put them on the remote repository for her to see them.
+
+git add feedback.html 
+git commit -m "Add customer feedback form" 
+git fetch 
+git push -u origin feedback_form 
+
+
+Before I push them up there though, I want to do a git fetch again and find out if there been any more commits that have come in that I need to take into consideration. If there have been, then I want to take a look at those and see whether I need to bring them into my feedback branch or not. In this example there were no other commits on master. I can go ahead, and I can push my branch up to origin, and I am pushing the whole branch, not just to commit. The branch doesn't exist up on the remote server until I push it. So I use git push, origin feedback_form, and then I also use that -u option.
+
+You will remember that makes it a tracking branch, so now in the future, I will continue to track changes from feedback_form, and it will save me some typing, because git will know where I want to push to without having to tell at each time. So when that's done, my work is now on the remote repository, now my coworkers can all see it. So I send an email to Lynda saying hey Lynda, remember that discussion we had last night about adding the feedback form? Well I did a draft of it, and I put it up on the remote. Can you take a look and let me know what you think? So now let's switch over, and let's look at things from Lynda's point of view.
+
+
+So Lynda also already has the repository, she has been working on it for couple of weeks. If she hadn't been, we know that she would do a git clone, in order to get the repository, and she is also going to be on the master branch, if not we will go ahead and just switch to make sure that she is there. The very first thing that Lynda is going to do, she needs to do a git fetch. Always the first thing. Until she does that fetch, she can't even see the branch that I pushed up there. Her computer hasn't sunk up so it doesn't have that information about all of the other branches that might be available.
+
+Lynda's work 
+git checkout master 
+git fetch 
+git merge origin/master 
+git checkout -b feedback_form origin/feedback_form 
+
+After the git fetch though, now git branch -r will show her that new branch, and she can see it. There were changes that came in over night from other coworkers, so she will probably want to incorporate those into her master branch to just to make sure that master is always brought up to date. It's not strictly necessary, but it's a good practice. After she has done that, she will be ready to take a look at my work. So she will want to check out the branch that I pushed up there. Again she will use check out with the -b option. This time she won't just say feedback form which would take it from the branch that she's currently on, her version of master, instead she will say feedback form and the source from that is going to be origin feedback form, the one that I put up there.
+
+It will also make it a tracking branch at the same time, so she wants to see what I did, she is going to use git log and she can find the commit that I made or added feedback.form.html. She can also take a look at the actual commit itself, she will use the SHA probably. She could also use HEAD if that was still the last commit and see what that said. She could also use the branch name, git show feedback_form, and as long as it's the last commit that's the one she would see. After looking at my commit and bringing it up in the browser to take a look there, Lynda decides that we should add a select option to the form so that customers can pick which tour they took and include that with the feedback, and that way we will know which tour they are referencing when they talk about the tour that they took.
+
+git log 
+git show 84b6ad 
+
+So she makes that change and then she commits it and she does that using the -a option so that it both adds it to staging and commits it all at the same time. Now she has got that change on her local machine, she needs to put it on the remote where I can see it. So she does a git fetch to make sure no new changes have come in, they haven't so she does a git push. At this point Lynda is done. So she sends me back an email saying, it looks great I just made one quick change. On my side again, I want to see what change she has got, so the very first thing I do is fetch, so I can see the change.
+ 
+ git commit -am "Add tour selector to feedback form"
+ git fetch
+ git push 
+ 
+ 
+Before I merge it in though, I want to take a look at it, so I am going to using git log. I am going to use the -p option which is for patch, and it will show each of the log entries with a diff of all the changes that were made in that log entry. And I am going to ask it to show me everything from feedback form, my copy, up to where origin feedback form is. That's the difference between the state of mine and the state of what Lynda pushed up to the repository. So I can look at those, and I can take a look at all the changes that she made, those changes look fine, I like them.
+
+My work 
+git fetch
+git log -p feedback_form..origin/feedback_form 
+
+So I am going to now go ahead and merge them into my feedback branch. So at this point now, the feedback_form branch is in sync between me, the remote repository and Lynda. We all have the same things. In this case the merge was a fast-forward merge, so there is really nothing to commit, but if I had made other changes in the mean time that I needed to merge in, well then I would merge those together, and we will push the result back up to the remote. But since I didn't, since it was a simple fast-forward merge, I am ready to now call this feature finished and to fold it back into the master branch.
+
+git merge origin/feedback_form 
+
+So I am going to switch back to the master branch, after I switch branches, I want to do a git fetch and find out if there were any changes that came in, while I was looking at Lynda's changes. If there were new changes that came in, I am going to merge those back into origin/master. At this point now, master is completely up to date. I definitely want to make sure I have got master as up to date is possible before I do this next step. Then next step is that I am going to merge in the changes from feedback form. I am going to take the new work and merge it into the most recent possible state of master.
+
+git checkout master 
+git fetch 
+git merge origin/master 
+git merge feedback_form
+
+
+I did a merge from feedback_form but I could have just as easily done a merge from origin feedback_form. They both point to the exact same commit and then after I have made that merge, and I've resolved any kind of merge conflicts that might have come up, then I do git push, and now my work is on the remote in the master branch where all of my coworkers can see it, where it can eventually be deployed on the Explore California web site. That gives an idea of the process which you go through when you're collaborating with the coworkers.
+
+git push
+
+It may change because you may be collaborating with three or four different people, you may all be checking in and out things, but it's the same basic kind of process over and over again. It may seem like a lot to remember when you're a beginner, but it becomes second nature very quickly. 
+
+=========================Chapter 14===TOOLS AND NEXT STEPS==================
+Setting up aliases for common commands =========================
+--can be dangerous as a beginner 
+-- but can be good to helpful (put in user global config)
+-- USER C:\Users\maclean\.gitconfig 
+
+git config --global alias.st "status"
+now can do 
+git st 
+
+git config --global alias.co checkout 
+git config --global alias.ci commit 
+git config --global alias.br branch 
+git config --global alias.df diff 
+git config --global alias.dfs "diff --staged"
+git config --global alias.logg  "log --graph --decorate --oneline --abbrev-commit --all"
+
+Using SSH keys for remote login =========================
+Throughout the chapter on working with remotes, every time we want to communicate with 
+the remote repository, we had to enter our credentials again, our username and our 
+password, and we had to do it every single time, even if we were just doing git fetch, 
+we had to login to that server again.
+
+http://help.github.com/articles/generating-ssh-keys 
+The idea behind SSH Keys is different than caching your password in a keychain. 
+Instead, we have a little bit of code, an actual file that resides on my computer. 
+And I take that same code, or actually a complementary part of it, and put it up on 
+the GitHub server.
+
+Exploring integrated development environments =========================
+Many of you are probably new to Git, but not new to the world of development, 
+and you probably have some tools that you already like to use. Typically, these 
+would be editors and integrated development environments, or IDEs for short.
+
+ I won't go through all of them, but I am just going to list off some of the more 
+ popular editors and integrated development environments that you might use. All 
+ of these have some kind of Git integration available to them. So if any of these 
+ are something that you're already using, you'll definitely want to look for those 
+ features and find out how to use them.
+ Vim
+ Emacs
+ TextMate
+ Eclipse
+ Netbeans
+ Visual Studio
+ IntelliJ
+ RubyMIne
+ PHPStorm
+ 
+Exploring graphical user interfaces =========================
+GitWeb --need to set up web server to host it
+
+Graphical User Interfaces for Mac
+GitX			gitx.org 
+GitHub		mac.github.com 
+SourceTree	sourcetreeapp.com
+Tower		git-tower.com 
+SmartGit 
+Gitbox		gitboxapp.com 
+
+Graphical User Interfaces for Windows
+ToitoiseGit		code.google.com/p/tortoisegit
+GitHub 			windows.github.com 
+Git Extensions	code.google.com/p/gitextensions
+SmartGit		syntevo.com/smartgit
+
+git.wiki.kernel.org/index.php/InterfacesFrontendsAndTools 
+
+
+Understanding Git hosting =========================
+
+
+
+===================================================
+===================================================
+===================================================
+CONCLUSION
+Goodbye
+
+
+
+
+
+
