@@ -849,6 +849,18 @@ PUSH to server
 1) it creates a duplicate of our repo on the remote server 
 2) it creates a branch on our computer called     origin/master
 
+Sooo we end up with 3 branches.
+REMOTE SERVER
+master
+MY COMPUTER
+origin/master  <--this tries to track the remote server.
+master
+
+when we make changes to our local master do a PUSH to remote server 
+we do a fetch to get changes from remote server but it puts it in origin/master locally 
+then we need to do a merge from origin/master to our master 
+
+
 At that point, the remote server creates the same branch with the same commits 
 with the exact same commit IDs referring to all of them, at that point our 
 collaborators have the ability to see our commits. At the same time, Git 
@@ -953,13 +965,18 @@ git remote add origin https://github.com/rick-maclean/explore_california.git
 git remote add github https://github.com/rick-maclean/explore_california.git  could do github
    now our local repo knows about the remote one
    
+                   NOTE origin is the default but we could give it another alias name
+   
 git remote 
 git remote -v
+                shows both the one we will push to and fetch from
 git remote rm origin  (this will remove it from my local repo)
 
 *********====== Creating a remote branch ======================
 git push -u origin master      push this branch onto the corresponding branch on the remote server
-                             push to 'origin' the local branch 'master' on the remote server
+                             push to 'origin' a branch 'master'(the local branch 'master') on the remote server
+							 NOTE: origin is the alias for the remote repo 
+							 
 							 
 			asks for rick-maclean and password 
 			-u causes the tracking 
@@ -980,7 +997,7 @@ go to github and find one I want.
 git clone https://.....     name_I_choose_for_directory
 git clone https://github.com/rick-maclean/explore_california.git ricks_clone
 git branch  <--will only get the master branch
-git clone -b for branch will get a particular branch
+git clone -b for branch will get a particular branch 
 
 *********====== Tracking remote branches ========AUTOMATICALLY==============
 pull updates from master regularly
@@ -1008,12 +1025,14 @@ cat .git/config  <--see this in ricks_clone and the original one
 now do this
 git branch non_tracking
 git push origin non_tracking   <--puts it up there but does not track it.
+							   <--push to origin(remote repo) this new branch called non_tracking 
 cat .git/config 
 
 to make it tracking we can do this
 git config branch.non_tracking.remote origin 
 OR do this
 git branch --set-upstream non_tracking origin/non_tracking  <--we are not going to do this
+						<--but doing this would set up tracking of non_tracking with origin/non_tracking 
 
 *********====== Pushing changes to a remote repository ======================
 modify tours.html to change a link to another html file
@@ -1026,12 +1045,12 @@ git log --oneline
 git log --oneline origin/master  <--shows this is not on my copy of remote 
 
 NOW PUSH
-git push origin master  <--can do this but can just do
+git push origin master  <--can do this (push to origin changes in master) but can just do
 git push                <--since it is tracking  (it pushes it to the remote repo)
                 can see this on GitHub
 				click on the commit on GitHub and see what changed 
 
-NOW GOTO LYNDA
+NOW GOTO Ricks clone
 cd ..
 cd ricks_clone 
 git log --oneline origin/master  does not show the most recent commit THEREFORE fetch
@@ -1045,7 +1064,8 @@ git branch -r  <--does not show the new branch we pushed up there from the defau
 git fetch   <--synch with remote repo 
 OR 
 git fetch origin  <--if we have more than one remote repo 
-
+				  <--NOTE: until we do this we will not see the changes on the remote repo 
+				  
 now 
 git log --oneline origin/master  shows the new commit 
 git log --oneline master         does not change master but only the copy of the remote 
@@ -1099,14 +1119,16 @@ those conflicts.
 
 git branch -a 
 git diff origin/master..master
-git merge origin/master             <--merge in this branch with the one I am on
+git merge origin/master         <--merge in this branch with the one I am on 'master'
 
-REMEMBER: do a fetch first before dong a merge 
+PULL  REMEMBER: do a fetch first before dong a merge 
 git pull = git fetch + git merge    <--it obscures what is happening and if things go wrong
 										it is hard to fix it. 
 
-
 *********====== Checking out remote branches ======================
+NOTE: we really cannot checkout a remote branch or origin/master because it is 
+      for tracking with the remote repo. 
+
 while on ricks_clone
 git branch -r  <--shows origin/non_tracking
 SOoooo
@@ -1115,9 +1137,9 @@ git branch   <--now shows it
 Now 
 cat .git/config  <--shows we are tracking "non_tracking"
 
-git branch -d non_tracking  <--can do this 
+git branch -d non_tracking  <--can do this to delete it on our local repo
 
-can also do this 
+can also do this to track the origin version and create it.
 git checkout -b non_tracking  origin/non_tracking 
 
 *********====== Pushing to an updated remote branch ======================
@@ -1136,11 +1158,11 @@ Soooo first fetch then merge (and if there are conflicts resolve)
 3) push     (now the remote server will accept it)
 
 *********====== Deleting a remote branch ======================
-older way 
+OLDER WAY 
 git push origin :non_tracking   <--deletes it 
 git branch -r 
 
-newer way 
+NEWER WAY
 git push origin --delete non_tracking   <--this deletes it on the remote
 
 *********====== Enabling collaboration ======================
@@ -1204,9 +1226,9 @@ In this movie, we will look at an example workflow showing how to use Git to col
 
 MY Work
 git checkout master
-git fetch 
+git fetch origin 
 git merge origin/master 
-git checkout -b feedback_form 
+git checkout -b feedback_form   <--create a new feature branch
 
 Let's start by looking at what my work would look like. Now this is an ongoing project. I've already got my repositories set up, and I have already pushed at least the master branch up to the remote repositories. So let's assume that we have already done that ahead of time, I am just logging in today to create this new feature. I am already on my master branch, if I'm not, then I will check out the master branch that I start there at master. And then the very first thing that we want to do every day, every time we start work, every time we have been away from the computer for a few hours, we want to do a git fetch.
 
@@ -1216,11 +1238,11 @@ I am going to do the work on my new feature in the separate branch, and that way
 
 So I open up my working directory, I make the changes that I want there, in this case I am going to be adding a page called feedback.html, and I go in, and I edit the form and get it all look exactly like I want. When I am done, then I am ready to make my commit. So I add it to the staging area, and then I commit it. At this point, my changes are now on my local repository inside my feedback form branch. I am not ready to merge them into master just yet, I want my coworker Lynda to have a look at them as well. So I need to put them on the remote repository for her to see them.
 
+create this file feedback.html 
 git add feedback.html 
 git commit -m "Add customer feedback form" 
 git fetch 
-git push -u origin feedback_form 
-
+git push -u origin feedback_form    <--push to origin this feature branch for Lynda to work on 
 
 Before I push them up there though, I want to do a git fetch again and find out if there been any more commits that have come in that I need to take into consideration. If there have been, then I want to take a look at those and see whether I need to bring them into my feedback branch or not. In this example there were no other commits on master. I can go ahead, and I can push my branch up to origin, and I am pushing the whole branch, not just to commit. The branch doesn't exist up on the remote server until I push it. So I use git push, origin feedback_form, and then I also use that -u option.
 
@@ -1229,11 +1251,12 @@ You will remember that makes it a tracking branch, so now in the future, I will 
 
 So Lynda also already has the repository, she has been working on it for couple of weeks. If she hadn't been, we know that she would do a git clone, in order to get the repository, and she is also going to be on the master branch, if not we will go ahead and just switch to make sure that she is there. The very first thing that Lynda is going to do, she needs to do a git fetch. Always the first thing. Until she does that fetch, she can't even see the branch that I pushed up there. Her computer hasn't sunk up so it doesn't have that information about all of the other branches that might be available.
 
-Lynda's work 
+Lynda's Work 
 git checkout master 
 git fetch 
-git merge origin/master 
-git checkout -b feedback_form origin/feedback_form 
+git merge origin/master            <--with Lynda's master 
+git branch -r                     <--should show the branch there
+git checkout -b feedback_form origin/feedback_form <--create a new local branch and track it
 
 After the git fetch though, now git branch -r will show her that new branch, and she can see it. There were changes that came in over night from other coworkers, so she will probably want to incorporate those into her master branch to just to make sure that master is always brought up to date. It's not strictly necessary, but it's a good practice. After she has done that, she will be ready to take a look at my work. So she will want to check out the branch that I pushed up there. Again she will use check out with the -b option. This time she won't just say feedback form which would take it from the branch that she's currently on, her version of master, instead she will say feedback form and the source from that is going to be origin feedback form, the one that I put up there.
 
@@ -1241,13 +1264,14 @@ It will also make it a tracking branch at the same time, so she wants to see wha
 
 git log 
 git show 84b6ad 
+or
+git show feedback_form 
 
 So she makes that change and then she commits it and she does that using the -a option so that it both adds it to staging and commits it all at the same time. Now she has got that change on her local machine, she needs to put it on the remote where I can see it. So she does a git fetch to make sure no new changes have come in, they haven't so she does a git push. At this point Lynda is done. So she sends me back an email saying, it looks great I just made one quick change. On my side again, I want to see what change she has got, so the very first thing I do is fetch, so I can see the change.
  
  git commit -am "Add tour selector to feedback form"
  git fetch
- git push 
- 
+ git push        <--Lynda pushes those changes up to the remote repo  
  
 Before I merge it in though, I want to take a look at it, so I am going to using git log. I am going to use the -p option which is for patch, and it will show each of the log entries with a diff of all the changes that were made in that log entry. And I am going to ask it to show me everything from feedback form, my copy, up to where origin feedback form is. That's the difference between the state of mine and the state of what Lynda pushed up to the repository. So I can look at those, and I can take a look at all the changes that she made, those changes look fine, I like them.
 
