@@ -6,7 +6,10 @@ WHO SHOULD USE GIT
 
 
 
-
+colors (this did not seem to do anything useful)
+git config --global color.status.updated magenta
+git config --global color.status.untracked magenta
+git config --global color.diff.old magenta
 
 
 
@@ -1173,12 +1176,25 @@ git branch non_tracking
 git push origin non_tracking   <--puts it up there but does not track it.
 							   <--push to origin(remote repo) this new branch called non_tracking 
 cat .git/config 
+this shows the following in the file
+[branch "master"]
+	remote = origin 
+	merge = refs/heads/master 
+	
 
 to make it tracking we can do this
 git config branch.non_tracking.remote origin 
+git config branch.non_tracking.merge refs/heads/master
 OR do this
 git branch --set-upstream non_tracking origin/non_tracking  <--we are not going to do this
 						<--but doing this would set up tracking of non_tracking with origin/non_tracking 
+				
+
+git config branch.Dictionary.remote origin 
+git config branch.Dictionary.merge refs/heads/feature/Dictionary
+git branch --set-upstream feature/Dictionary origin/feature/Dictionary
+				
+https://github.com/sillsdev/FieldWorks.git
 
 *********====== Pushing changes to a remote repository ======================
 modify tours.html to change a link to another html file
